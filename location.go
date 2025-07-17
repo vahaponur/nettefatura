@@ -68,14 +68,14 @@ func GetCityID(cityName string) string {
 		}
 	}
 	
-	return ""
+	return "-1"
 }
 
 // GetDistrictID il ID'si ve ilçe adından ilçe ID'sini bulur
 func GetDistrictID(cityID, districtName string) int {
 	districts, ok := locationData.Districts[cityID]
 	if !ok {
-		return 0
+		return -1
 	}
 	
 	normalized := normalizeString(districtName)
@@ -120,14 +120,14 @@ func GetDistrictID(cityID, districtName string) int {
 		}
 	}
 	
-	return 0
+	return -1
 }
 
 // GetDistrictIDByNames il adı ve ilçe adından direkt ilçe ID'sini bulur
 func GetDistrictIDByNames(cityName, districtName string) int {
 	cityID := GetCityID(cityName)
-	if cityID == "" {
-		return 0
+	if cityID == "-1" {
+		return -1
 	}
 	
 	return GetDistrictID(cityID, districtName)
@@ -140,14 +140,14 @@ func GetCityName(cityID string) string {
 			return city.Name
 		}
 	}
-	return ""
+	return "-1"
 }
 
 // GetDistrictName ilçe ID'sinden ilçe adını bulur
 func GetDistrictName(cityID string, districtID int) string {
 	districts, ok := locationData.Districts[cityID]
 	if !ok {
-		return ""
+		return "-1"
 	}
 	
 	for _, district := range districts {
@@ -156,5 +156,5 @@ func GetDistrictName(cityID string, districtID int) string {
 		}
 	}
 	
-	return ""
+	return "-1"
 }

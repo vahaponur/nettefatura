@@ -274,17 +274,25 @@ export NETTEFATURA_COMPANY_ID="YOUR_COMPANY_ID_HERE"
 
 Paket, il ve ilçe ID'lerini kolayca bulmanız için helper fonksiyonlar içerir:
 
-- `GetCityID(cityName string) string` - İl adından il ID'si bulur
-- `GetDistrictID(cityID, districtName string) int` - İl ID'si ve ilçe adından ilçe ID'si bulur
-- `GetDistrictIDByNames(cityName, districtName string) int` - İl ve ilçe adlarından direkt ilçe ID'si bulur
-- `GetCityName(cityID string) string` - İl ID'sinden il adı bulur
-- `GetDistrictName(cityID string, districtID int) string` - İlçe ID'sinden ilçe adı bulur
+- `GetCityID(cityName string) string` - İl adından il ID'si bulur (bulamazsa "-1" döner)
+- `GetDistrictID(cityID, districtName string) int` - İl ID'si ve ilçe adından ilçe ID'si bulur (bulamazsa -1 döner)
+- `GetDistrictIDByNames(cityName, districtName string) int` - İl ve ilçe adlarından direkt ilçe ID'si bulur (bulamazsa -1 döner)
+- `GetCityName(cityID string) string` - İl ID'sinden il adı bulur (bulamazsa "-1" döner)
+- `GetDistrictName(cityID string, districtID int) string` - İlçe ID'sinden ilçe adı bulur (bulamazsa "-1" döner)
 
 **Özellikler:**
 - Büyük/küçük harf duyarsız (İstanbul = istanbul = ISTANBUL)
 - Türkçe karakter duyarsız (Çanakkale = canakkale, Ağrı = agri)
 - Merkez ilçe desteği (Adıyaman yazınca Adıyaman Merkez'i bulur)
 - Tüm il/ilçe verileri `assets/il-ilce-data.json` dosyasında
+- Bulunamayan il/ilçe durumunda `-1` döner
+
+**Bulunamama Durumu Örneği:**
+```go
+cityID := nettefatura.GetCityID("YokBöyleBirİl")        // "-1"
+districtID := nettefatura.GetDistrictID("28", "YokBöyleBirİlçe") // -1
+districtID = nettefatura.GetDistrictIDByNames("YokBöyleBirİl", "Kadıköy") // -1
+```
 
 ## Önemli Notlar
 
