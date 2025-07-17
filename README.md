@@ -53,6 +53,8 @@ if err != nil {
 
 ### Müşteri Oluşturma
 
+#### İl/İlçe ID'leri ile:
+
 ```go
 customer := nettefatura.Customer{
     Name:       "Ahmet Yılmaz",
@@ -62,7 +64,7 @@ customer := nettefatura.Customer{
     Address:    "Test Mahallesi Test Caddesi No:1",
     CityID:     "28",       // İstanbul
     CityName:   "İstanbul",
-    DistrictID: "413",      // Kadıköy
+    DistrictID: "455",      // Kadıköy
     PostalCode: "34710",
 }
 
@@ -71,6 +73,44 @@ if err != nil {
     log.Fatal(err)
 }
 ```
+
+#### İl/İlçe Helper Fonksiyonları ile:
+
+```go
+// İl ve ilçe isimlerinden ID bulma
+cityID := nettefatura.GetCityID("İstanbul")        // "28"
+districtID := nettefatura.GetDistrictID(cityID, "Kadıköy") // 455
+
+// Veya direkt isimlerle
+districtID := nettefatura.GetDistrictIDByNames("istanbul", "kadikoy") // 455
+
+// Büyük/küçük harf ve Türkçe karakter duyarsız
+cityID = nettefatura.GetCityID("istanbul")     // "28"
+cityID = nettefatura.GetCityID("ISTANBUL")     // "28"
+cityID = nettefatura.GetCityID("iStAnBuL")     // "28"
+
+// Merkez ilçe desteği - il adı yazınca merkez ilçeyi bulur
+districtID = nettefatura.GetDistrictIDByNames("Adıyaman", "Adıyaman") // Adıyaman Merkez
+
+customer := nettefatura.Customer{
+    Name:       "Ahmet Yılmaz",
+    TaxNumber:  "11111111111",
+    Email:      "ahmet@example.com",
+    Phone:      "5551234567",
+    Address:    "Test Mahallesi Test Caddesi No:1",
+    CityID:     cityID,
+    CityName:   nettefatura.GetCityName(cityID), // İsim almak için
+    DistrictID: fmt.Sprintf("%d", districtID),
+    PostalCode: "34710",
+}
+
+customerID, err := client.CreateCustomer(customer)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+**Not:** İl ve ilçe ID'leri için `assets/il-ilce-data.json` dosyasına bakabilirsiniz.
 
 ### Fatura Oluşturma
 
@@ -121,14 +161,18 @@ fmt.Printf("Fatura oluşturuldu: %s\n", invoiceNo)
 ### Müşteri ve Fatura Birlikte Oluşturma
 
 ```go
+// Helper fonksiyonlarla il/ilçe bulma
+cityID := nettefatura.GetCityID("Ankara")
+districtID := nettefatura.GetDistrictIDByNames("Ankara", "Çankaya")
+
 customer := &nettefatura.Customer{
     Name:       "Mehmet Demir",
     TaxNumber:  "11111111111",
     Email:      "mehmet@example.com",
     Phone:      "5559876543",
-    CityID:     "28",
-    CityName:   "İstanbul",
-    DistrictID: "413",
+    CityID:     cityID,
+    CityName:   "Ankara",
+    DistrictID: fmt.Sprintf("%d", districtID),
 }
 
 products := []nettefatura.Product{
@@ -143,6 +187,67 @@ products := []nettefatura.Product{
 invoiceNo, err := client.CreateInvoiceWithCustomer(customer, products)
 if err != nil {
     log.Fatal(err)
+}
+```
+
+### Tam Örnek - Kolay Fatura Oluşturma
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+    "time"
+    "github.com/vahaponur/nettefatura"
+)
+
+func main() {
+    // Client oluştur
+    client, err := nettefatura.NewClient("YOUR_COMPANY_ID")
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Giriş yap
+    err = client.Login("YOUR_VKN", "YOUR_PASSWORD")
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // İl/ilçe helper ile müşteri oluştur
+    cityID := nettefatura.GetCityID("İzmir")
+    districtID := nettefatura.GetDistrictID(cityID, "Karşıyaka")
+    
+    customer := &nettefatura.Customer{
+        Name:       "Ali Veli",
+        TaxNumber:  "11111111111",
+        Email:      "ali@example.com",
+        Phone:      "5551112233",
+        Address:    "Karşıyaka Mahallesi No:1",
+        CityID:     cityID,
+        CityName:   "İzmir",
+        DistrictID: fmt.Sprintf("%d", districtID),
+        PostalCode: "35000",
+    }
+
+    // KDV dahil 1000 TL'lik fatura
+    kdvHaric := nettefatura.CalculatePriceWithoutVAT(1000, 20)
+    
+    products := []nettefatura.Product{{
+        Name:     "Davetiye Tasarım",
+        Quantity: 1,
+        Price:    kdvHaric,
+        VATRate:  20,
+    }}
+
+    // Fatura oluştur
+    invoiceNo, err := client.CreateInvoiceWithCustomer(customer, products)
+    if err != nil {
+        log.Fatal(err)
+    }
+    
+    fmt.Printf("Fatura başarıyla oluşturuldu: %s\n", invoiceNo)
 }
 ```
 
@@ -164,6 +269,22 @@ export NETTEFATURA_COMPANY_ID="YOUR_COMPANY_ID_HERE"
 - `WithTimeout(timeout time.Duration)` - HTTP client timeout
 - `WithCurrencyCode(code string)` - Para birimi (varsayılan: TRY)
 - `WithMeasureUnit(unit int)` - Ölçü birimi (varsayılan: 67 - Adet)
+
+## İl/İlçe Helper Fonksiyonları
+
+Paket, il ve ilçe ID'lerini kolayca bulmanız için helper fonksiyonlar içerir:
+
+- `GetCityID(cityName string) string` - İl adından il ID'si bulur
+- `GetDistrictID(cityID, districtName string) int` - İl ID'si ve ilçe adından ilçe ID'si bulur
+- `GetDistrictIDByNames(cityName, districtName string) int` - İl ve ilçe adlarından direkt ilçe ID'si bulur
+- `GetCityName(cityID string) string` - İl ID'sinden il adı bulur
+- `GetDistrictName(cityID string, districtID int) string` - İlçe ID'sinden ilçe adı bulur
+
+**Özellikler:**
+- Büyük/küçük harf duyarsız (İstanbul = istanbul = ISTANBUL)
+- Türkçe karakter duyarsız (Çanakkale = canakkale, Ağrı = agri)
+- Merkez ilçe desteği (Adıyaman yazınca Adıyaman Merkez'i bulur)
+- Tüm il/ilçe verileri `assets/il-ilce-data.json` dosyasında
 
 ## Önemli Notlar
 
