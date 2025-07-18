@@ -8,7 +8,6 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -416,41 +415,64 @@ func (c *Client) CreateInvoiceRaw(invoice Invoice) ([]byte, error) {
 	}
 
 	// Ürünleri hazırla
-	products := make([]map[string]interface{}, 0, len(invoice.Products))
-	var totalLineExtension, totalVAT, totalAmount float64
+	var products []map[string]interface{}
+	var totalLineExtension, totalVAT float64
 
-	for _, p := range invoice.Products {
-		lineTotal := p.Price * p.Quantity
-		vatAmount := lineTotal * float64(p.VATRate) / 100
-		totalWithVAT := lineTotal + vatAmount
-
+	for _, product := range invoice.Products {
+		lineTotal := product.Price * product.Quantity
+		vatAmount := lineTotal * float64(product.VATRate) / 100
 		totalLineExtension += lineTotal
 		totalVAT += vatAmount
-		totalAmount += totalWithVAT
 
-		product := map[string]interface{}{
-			"Name":               p.Name,
-			"Quantity":           strconv.FormatFloat(p.Quantity, 'f', 2, 64),
-			"UnitPrice":          strconv.FormatFloat(p.Price, 'f', 2, 64),
-			"VatRate":            strconv.Itoa(p.VATRate),
-			"IdMeasureUnit":      c.config.MeasureUnit,
-			"LineExtensionAmount": strconv.FormatFloat(lineTotal, 'f', 2, 64),
-			"VatAmount":          strconv.FormatFloat(vatAmount, 'f', 2, 64),
-			"TaxInclusiveAmount": strconv.FormatFloat(totalWithVAT, 'f', 2, 64),
-		}
-		products = append(products, product)
+		products = append(products, map[string]interface{}{
+			"ProductInvoiceModelId":   0,
+			"DiscountAmount":          0,
+			"DiscountRate":            0,
+			"LineExtensionAmount":     lineTotal,
+			"MeasureUnitId":           c.config.MeasureUnit,
+			"ProductId":               nil,
+			"ProductName":             product.Name,
+			"Quantity":                product.Quantity,
+			"UnitPrice":               product.Price,
+			"VatAmount":               vatAmount,
+			"VatRate":                 product.VATRate,
+			"AdditionalTaxes":         []interface{}{},
+			"WitholdingTaxes":         []interface{}{},
+			"Deleted":                 false,
+			"DeliveryList":            []interface{}{},
+			"CustomsTrackingList":     []interface{}{},
+			"TaxExemptionReason":      "",
+			"TaxExemptionReasonCode":  "",
+			"IdMensei":                0,
+			"Mensei":                  nil,
+			"SiniflandirmaKodu":       nil,
+			"IdSiniflandirmaKodu":     0,
+			"GTipNoArcvh":             "",
+		})
 	}
 
-	// Not'ları birleştir
-	notes := strings.Join(invoice.Notes, " ")
+	totalAmount := totalLineExtension + totalVAT
 
-	// Fatura verisi hazırla
+	// Notes
+	notes := invoice.Notes
+	if len(notes) == 0 {
+		notes = []string{""}
+	}
+
+	// Fatura JSON - CreateInvoice ile aynı format
 	invoiceData := map[string]interface{}{
-		"IdCompany":                  c.config.CompanyID,
-		"InvoiceProfileType":         "EARSIVFATURA",
-		"IsQuickInvoice":             true,
-		"InvoiceDate":                invoice.Date.Format("02.01.2006"),
-		"InvoiceTime":                time.Now().Format("15:04:05"),
+		"ETTN":                       "",
+		"InvoiceId":                  "0",
+		"RecipientType":              "2",
+		"InvoiceNumber":              "",
+		"CompanyId":                  c.config.CompanyID,
+		"ScenarioType":               "0",
+		"ReceiverInboxTag":           nil,
+		"InvoiceDate":                invoice.Date.Format("02-01-2006"),
+		"InvoiceTime":                invoice.Date.Format("15:04:05"),
+		"InvoiceType":                "1", // Satış faturası
+		"LastPaymentDate":            "",
+		"DispatchList":               []interface{}{},
 		"IdAlici":                    invoice.CustomerID,
 		"Products":                   products,
 		"CurrencyCode":               c.config.CurrencyCode,
