@@ -8,6 +8,7 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -401,6 +402,103 @@ func (c *Client) CreateInvoice(invoice Invoice) (string, error) {
 	}
 
 	return invoiceNo, nil
+}
+
+// CreateInvoiceRaw creates invoice and returns raw response body
+func (c *Client) CreateInvoiceRaw(invoice Invoice) ([]byte, error) {
+	if invoice.CustomerID == "" {
+		return nil, fmt.Errorf("müşteri ID gerekli")
+	}
+
+	// Token güncelle
+	if err := c.updateToken("/Invoice/CreateQuick"); err != nil {
+		return nil, fmt.Errorf("token güncellenemedi: %w", err)
+	}
+
+	// Ürünleri hazırla
+	products := make([]map[string]interface{}, 0, len(invoice.Products))
+	var totalLineExtension, totalVAT, totalAmount float64
+
+	for _, p := range invoice.Products {
+		lineTotal := p.Price * p.Quantity
+		vatAmount := lineTotal * float64(p.VATRate) / 100
+		totalWithVAT := lineTotal + vatAmount
+
+		totalLineExtension += lineTotal
+		totalVAT += vatAmount
+		totalAmount += totalWithVAT
+
+		product := map[string]interface{}{
+			"Name":               p.Name,
+			"Quantity":           strconv.FormatFloat(p.Quantity, 'f', 2, 64),
+			"UnitPrice":          strconv.FormatFloat(p.Price, 'f', 2, 64),
+			"VatRate":            strconv.Itoa(p.VATRate),
+			"IdMeasureUnit":      c.config.MeasureUnit,
+			"LineExtensionAmount": strconv.FormatFloat(lineTotal, 'f', 2, 64),
+			"VatAmount":          strconv.FormatFloat(vatAmount, 'f', 2, 64),
+			"TaxInclusiveAmount": strconv.FormatFloat(totalWithVAT, 'f', 2, 64),
+		}
+		products = append(products, product)
+	}
+
+	// Not'ları birleştir
+	notes := strings.Join(invoice.Notes, " ")
+
+	// Fatura verisi hazırla
+	invoiceData := map[string]interface{}{
+		"IdCompany":                  c.config.CompanyID,
+		"InvoiceProfileType":         "EARSIVFATURA",
+		"IsQuickInvoice":             true,
+		"InvoiceDate":                invoice.Date.Format("02.01.2006"),
+		"InvoiceTime":                time.Now().Format("15:04:05"),
+		"IdAlici":                    invoice.CustomerID,
+		"Products":                   products,
+		"CurrencyCode":               c.config.CurrencyCode,
+		"CrossRate":                  0,
+		"TaxExemptionReason":         "",
+		"Notes":                      notes,
+		"Receiver":                   map[string]string{"SendingType": "1"},
+		"IsFreeOfCharge":             false,
+		"KismiIadeMi":                false,
+		"CompanyBankAccountList":     []interface{}{},
+		"TotalLineExtensionAmount":   totalLineExtension,
+		"TotalVATAmount":             totalVAT,
+		"TotalTaxInclusiveAmount":    totalAmount,
+		"TotalDiscountAmount":        0,
+		"TotalPayableAmount":         totalAmount,
+		"RoundCounter":               0,
+	}
+
+	jsonData, err := json.Marshal(invoiceData)
+	if err != nil {
+		return nil, fmt.Errorf("JSON marshal hatası: %w", err)
+	}
+
+	form := url.Values{
+		"jsonData":                   {string(jsonData)},
+		"__RequestVerificationToken": {c.token},
+	}
+
+	req, err := http.NewRequest("POST", c.config.BaseURL+"/Invoice/Create", strings.NewReader(form.Encode()))
+	if err != nil {
+		return nil, fmt.Errorf("request oluşturulamadı: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+	req.Header.Set("X-Requested-With", "XMLHttpRequest")
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("fatura oluşturma isteği başarısız: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("response okunamadı: %w", err)
+	}
+
+	return body, nil
 }
 
 // CreateInvoiceWithCustomer müşteri yoksa oluşturur ve fatura keser

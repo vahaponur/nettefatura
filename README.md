@@ -158,6 +158,27 @@ if err != nil {
 fmt.Printf("Fatura oluşturuldu: %s\n", invoiceNo)
 ```
 
+#### Raw Response için CreateInvoiceRaw
+
+Eğer ham response'a ihtiyacınız varsa (örneğin hata durumlarında bile 200 dönen API'ler için):
+
+```go
+rawResponse, err := client.CreateInvoiceRaw(invoice)
+if err != nil {
+    log.Fatal(err)
+}
+
+// Response'u kontrol et
+responseStr := string(rawResponse)
+if strings.Contains(responseStr, "error") || strings.Contains(responseStr, "html") {
+    log.Printf("Fatura oluşturma hatası: %s", responseStr)
+} else {
+    // Başarılı response genelde sadece fatura numarasıdır
+    invoiceNo := strings.Trim(responseStr, `"`)
+    fmt.Printf("Fatura oluşturuldu: %s\n", invoiceNo)
+}
+```
+
 ### Müşteri ve Fatura Birlikte Oluşturma
 
 ```go
