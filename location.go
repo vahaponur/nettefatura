@@ -77,9 +77,8 @@ func GetDistrictID(cityID, districtName string) int {
 	if !ok {
 		return -1
 	}
-
 	normalized := normalizeString(districtName)
-	isLookingForMerkez := strings.Contains(districtName, normalizeString("Merkez"))
+	isLookingForMerkez := strings.Contains(normalized, normalizeString("Merkez"))
 	// Önce direkt eşleşme dene
 	for _, district := range districts {
 		if strings.Contains(normalizeString(district.Name), "merkez") && isLookingForMerkez {
