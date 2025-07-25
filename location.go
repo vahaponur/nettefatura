@@ -10,7 +10,7 @@ import (
 var ilIlceDataJSON []byte
 
 type IlIlceData struct {
-	Cities   []City            `json:"cities"`
+	Cities    []City                `json:"cities"`
 	Districts map[string][]District `json:"districts"`
 }
 
@@ -37,7 +37,7 @@ func init() {
 func normalizeString(s string) string {
 	s = strings.ToLower(s)
 	s = strings.TrimSpace(s)
-	
+
 	// Türkçe karakter dönüşümleri
 	replacer := strings.NewReplacer(
 		"ğ", "g",
@@ -54,20 +54,20 @@ func normalizeString(s string) string {
 		"Ö", "o",
 		"Ç", "c",
 	)
-	
+
 	return replacer.Replace(s)
 }
 
 // GetCityID il adından il ID'sini bulur
 func GetCityID(cityName string) string {
 	normalized := normalizeString(cityName)
-	
+
 	for _, city := range locationData.Cities {
 		if normalizeString(city.Name) == normalized {
 			return city.ID
 		}
 	}
-	
+
 	return "-1"
 }
 
@@ -77,16 +77,19 @@ func GetDistrictID(cityID, districtName string) int {
 	if !ok {
 		return -1
 	}
-	
+
 	normalized := normalizeString(districtName)
-	
+	isLookingForMerkez := strings.Contains(districtName, normalizeString("Merkez"))
 	// Önce direkt eşleşme dene
 	for _, district := range districts {
+		if strings.Contains(normalizeString(district.Name), "merkez") && isLookingForMerkez {
+			return district.ID
+		}
 		if normalizeString(district.Name) == normalized {
 			return district.ID
 		}
 	}
-	
+
 	// Eğer bulamazsa ve sadece il adı verilmişse merkez ilçeyi ara
 	var cityName string
 	for _, city := range locationData.Cities {
@@ -95,21 +98,21 @@ func GetDistrictID(cityID, districtName string) int {
 			break
 		}
 	}
-	
+
 	if cityName != "" {
 		cityNameNormalized := normalizeString(cityName)
-		
+
 		// Sadece il adıyla tam eşleşiyorsa merkez ilçeleri ara
 		if normalized == cityNameNormalized {
 			// Önce il adını içeren merkez ilçeleri ara
 			for _, district := range districts {
 				districtNormalized := normalizeString(district.Name)
-				if strings.Contains(districtNormalized, "merkez") && 
-				   strings.Contains(districtNormalized, cityNameNormalized) {
+				if strings.Contains(districtNormalized, "merkez") &&
+					strings.Contains(districtNormalized, cityNameNormalized) {
 					return district.ID
 				}
 			}
-			
+
 			// Bulamazsa herhangi bir merkez ilçe
 			for _, district := range districts {
 				districtNormalized := normalizeString(district.Name)
@@ -119,7 +122,7 @@ func GetDistrictID(cityID, districtName string) int {
 			}
 		}
 	}
-	
+
 	return -1
 }
 
@@ -129,7 +132,7 @@ func GetDistrictIDByNames(cityName, districtName string) int {
 	if cityID == "-1" {
 		return -1
 	}
-	
+
 	return GetDistrictID(cityID, districtName)
 }
 
@@ -149,12 +152,12 @@ func GetDistrictName(cityID string, districtID int) string {
 	if !ok {
 		return "-1"
 	}
-	
+
 	for _, district := range districts {
 		if district.ID == districtID {
 			return district.Name
 		}
 	}
-	
+
 	return "-1"
 }
