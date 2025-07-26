@@ -427,7 +427,7 @@
       },
       {
         "id": 137,
-        "name": "Edremit/balıkesir"
+        "name": "Edremit"
       },
       {
         "id": 138,
@@ -439,7 +439,7 @@
       },
       {
         "id": 140,
-        "name": "Gönen/balıkesir"
+        "name": "Gönen"
       },
       {
         "id": 141,
@@ -509,7 +509,7 @@
       },
       {
         "id": 158,
-        "name": "Yenipazar/bilecik"
+        "name": "Yenipazar"
       }
     ],
     "4": [
@@ -621,7 +621,7 @@
       },
       {
         "id": 184,
-        "name": "Altınyayla/burdur"
+        "name": "Altınyayla"
       },
       {
         "id": 185,
@@ -649,7 +649,7 @@
       },
       {
         "id": 191,
-        "name": "Kemer/burdur"
+        "name": "Kemer"
       },
       {
         "id": 192,
@@ -737,7 +737,7 @@
     "9": [
       {
         "id": 212,
-        "name": "Ayvacık/çanakkale"
+        "name": "Ayvacık"
       },
       {
         "id": 213,
@@ -781,7 +781,7 @@
       },
       {
         "id": 223,
-        "name": "Yenice/çanakkale"
+        "name": "Yenice"
       }
     ],
     "10": [
@@ -841,7 +841,7 @@
       },
       {
         "id": 237,
-        "name": "Bayat/çorum"
+        "name": "Bayat"
       },
       {
         "id": 238,
@@ -877,7 +877,7 @@
       },
       {
         "id": 246,
-        "name": "Ortaköy/çorum"
+        "name": "Ortaköy"
       },
       {
         "id": 247,
@@ -911,7 +911,7 @@
       },
       {
         "id": 20,
-        "name": "Gölbaşı/adıyaman"
+        "name": "Gölbaşı"
       },
       {
         "id": 21,
@@ -953,7 +953,7 @@
       },
       {
         "id": 255,
-        "name": "Bozkurt/denizli"
+        "name": "Bozkurt"
       },
       {
         "id": 256,
@@ -989,7 +989,7 @@
       },
       {
         "id": 264,
-        "name": "Kale/denizli"
+        "name": "Kale"
       },
       {
         "id": 268,
@@ -1501,7 +1501,7 @@
       },
       {
         "id": 27,
-        "name": "Bayat/afyon"
+        "name": "Bayat"
       },
       {
         "id": 28,
@@ -1671,7 +1671,7 @@
       },
       {
         "id": 409,
-        "name": "Gönen/ısparta"
+        "name": "Gönen"
       },
       {
         "id": 410,
@@ -1717,7 +1717,7 @@
       },
       {
         "id": 420,
-        "name": "Aydıncık/içel"
+        "name": "Aydıncık"
       },
       {
         "id": 421,
@@ -1761,7 +1761,7 @@
       },
       {
         "id": 431,
-        "name": "Yenişehir/mersin"
+        "name": "Yenişehir"
       }
     ],
     "28": [
@@ -2105,7 +2105,7 @@
       },
       {
         "id": 515,
-        "name": "Bozkurt/kastamonu"
+        "name": "Bozkurt"
       },
       {
         "id": 517,
@@ -2149,7 +2149,7 @@
       },
       {
         "id": 526,
-        "name": "Pınarbaşı/kastamonu"
+        "name": "Pınarbaşı"
       },
       {
         "id": 528,
@@ -2211,7 +2211,7 @@
       },
       {
         "id": 541,
-        "name": "Pınarbaşı/kayseri"
+        "name": "Pınarbaşı"
       },
       {
         "id": 542,
@@ -2445,7 +2445,7 @@
       },
       {
         "id": 589,
-        "name": "Ereğli/konya"
+        "name": "Ereğli"
       },
       {
         "id": 590,
@@ -2609,7 +2609,7 @@
       },
       {
         "id": 629,
-        "name": "Kale/malatya"
+        "name": "Kale"
       },
       {
         "id": 630,
@@ -2629,7 +2629,7 @@
       },
       {
         "id": 634,
-        "name": "Yeşilyurt/malatya"
+        "name": "Yeşilyurt"
       }
     ],
     "40": [
@@ -2663,7 +2663,7 @@
       },
       {
         "id": 642,
-        "name": "Köprübaşı/manisa"
+        "name": "Köprübaşı"
       },
       {
         "id": 643,
@@ -3051,7 +3051,7 @@
       },
       {
         "id": 727,
-        "name": "Ulubey/ordu"
+        "name": "Ulubey"
       },
       {
         "id": 728,
@@ -3101,7 +3101,7 @@
       },
       {
         "id": 739,
-        "name": "Pazar/rize"
+        "name": "Pazar"
       },
       {
         "id": 740,
@@ -3193,7 +3193,7 @@
       },
       {
         "id": 762,
-        "name": "Ayvacık/samsun"
+        "name": "Ayvacık"
       },
       {
         "id": 763,
@@ -3327,7 +3327,7 @@
       },
       {
         "id": 794,
-        "name": "Altınyayla/sivas"
+        "name": "Altınyayla"
       },
       {
         "id": 795,
@@ -3425,7 +3425,7 @@
       },
       {
         "id": 816,
-        "name": "Saray/tekirdağ"
+        "name": "Saray"
       },
       {
         "id": 819,
@@ -3491,7 +3491,7 @@
       },
       {
         "id": 70,
-        "name": "Gölbaşı/ankara"
+        "name": "Gölbaşı"
       },
       {
         "id": 71,
@@ -3569,7 +3569,7 @@
       },
       {
         "id": 827,
-        "name": "Pazar/tokat"
+        "name": "Pazar"
       },
       {
         "id": 828,
@@ -3589,7 +3589,7 @@
       },
       {
         "id": 832,
-        "name": "Yeşilyurt/tokat"
+        "name": "Yeşilyurt"
       },
       {
         "id": 833,
@@ -3635,7 +3635,7 @@
       },
       {
         "id": 843,
-        "name": "Köprübaşı/trabzon"
+        "name": "Köprübaşı"
       },
       {
         "id": 844,
@@ -3693,7 +3693,7 @@
       },
       {
         "id": 857,
-        "name": "Ovacık/tunceli"
+        "name": "Ovacık"
       },
       {
         "id": 858,
@@ -3785,7 +3785,7 @@
       },
       {
         "id": 879,
-        "name": "Ulubey/uşak"
+        "name": "Ulubey"
       },
       {
         "id": 880,
@@ -3811,7 +3811,7 @@
       },
       {
         "id": 885,
-        "name": "Edremit/van"
+        "name": "Edremit"
       },
       {
         "id": 886,
@@ -3839,7 +3839,7 @@
       },
       {
         "id": 891,
-        "name": "Saray/van"
+        "name": "Saray"
       },
       {
         "id": 893,
@@ -3857,7 +3857,7 @@
       },
       {
         "id": 896,
-        "name": "Aydıncık/yozgat"
+        "name": "Aydıncık"
       },
       {
         "id": 897,
@@ -3923,7 +3923,7 @@
       },
       {
         "id": 912,
-        "name": "Ereğli/zonguldak"
+        "name": "Ereğli"
       },
       {
         "id": 913,
@@ -3993,7 +3993,7 @@
       },
       {
         "id": 85,
-        "name": "Aksu/antalya"
+        "name": "Aksu"
       },
       {
         "id": 86,
@@ -4037,7 +4037,7 @@
       },
       {
         "id": 96,
-        "name": "Kemer/antalya"
+        "name": "Kemer"
       },
       {
         "id": 97,
@@ -4291,7 +4291,7 @@
       },
       {
         "id": 978,
-        "name": "Ovacık/karabük"
+        "name": "Ovacık"
       },
       {
         "id": 979,
@@ -4299,7 +4299,7 @@
       },
       {
         "id": 980,
-        "name": "Yenice/karabük"
+        "name": "Yenice"
       }
     ],
     "77": [
@@ -4493,7 +4493,7 @@
       },
       {
         "id": 128,
-        "name": "Yenipazar/aydın"
+        "name": "Yenipazar"
       }
     ],
     "84": [
