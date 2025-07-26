@@ -61,26 +61,26 @@ func WithTimeout(timeout time.Duration) Option {
 
 // Client NetteFatura API client
 type Client struct {
-	httpClient   *http.Client
-	config       *Config
-	token        string
+	httpClient *http.Client
+	config     *Config
+	token      string
 }
 
 // Customer müşteri bilgileri
 type Customer struct {
-	Name          string
-	TaxNumber     string // TC Kimlik No
-	Email         string
-	Phone         string
-	Address       string
-	CityID        string
-	CityName      string
-	DistrictID    string
-	PostalCode    string
-	BuildingNo    string
-	TaxOfficeID   string // Vergi dairesi ID (-1 for default)
-	CustomerType  int    // 1=Bireysel, 2=Kurumsal
-	SendingType   int    // 1=Elektronik, 2=Kağıt
+	Name         string
+	TaxNumber    string // TC Kimlik No
+	Email        string
+	Phone        string
+	Address      string
+	CityID       string
+	CityName     string
+	DistrictID   string
+	PostalCode   string
+	BuildingNo   string
+	TaxOfficeID  string // Vergi dairesi ID (-1 for default)
+	CustomerType int    // 1=Bireysel, 2=Kurumsal
+	SendingType  int    // 1=Elektronik, 2=Kağıt
 }
 
 // Product ürün bilgileri
@@ -332,34 +332,34 @@ func (c *Client) CreateInvoice(invoice Invoice) (string, error) {
 	for _, product := range invoice.Products {
 		lineTotal := product.Price * product.Quantity
 		vatAmount := lineTotal * float64(product.VATRate) / 100
-		
+
 		totalLineExtension += lineTotal
 		totalVAT += vatAmount
 
 		products = append(products, map[string]interface{}{
-			"ProductInvoiceModelId":   0,
-			"DiscountAmount":          0,
-			"DiscountRate":            0,
-			"LineExtensionAmount":     lineTotal,
-			"MeasureUnitId":           c.config.MeasureUnit,
-			"ProductId":               nil,
-			"ProductName":             product.Name,
-			"Quantity":                product.Quantity,
-			"UnitPrice":               product.Price,
-			"VatAmount":               vatAmount,
-			"VatRate":                 product.VATRate,
-			"AdditionalTaxes":         []interface{}{},
-			"WitholdingTaxes":         []interface{}{},
-			"Deleted":                 false,
-			"DeliveryList":            []interface{}{},
-			"CustomsTrackingList":     []interface{}{},
-			"TaxExemptionReason":      "",
-			"TaxExemptionReasonCode":  "",
-			"IdMensei":                0,
-			"Mensei":                  nil,
-			"SiniflandirmaKodu":       nil,
-			"IdSiniflandirmaKodu":     0,
-			"GTipNoArcvh":             "",
+			"ProductInvoiceModelId":  0,
+			"DiscountAmount":         0,
+			"DiscountRate":           0,
+			"LineExtensionAmount":    lineTotal,
+			"MeasureUnitId":          c.config.MeasureUnit,
+			"ProductId":              nil,
+			"ProductName":            product.Name,
+			"Quantity":               product.Quantity,
+			"UnitPrice":              product.Price,
+			"VatAmount":              vatAmount,
+			"VatRate":                product.VATRate,
+			"AdditionalTaxes":        []interface{}{},
+			"WitholdingTaxes":        []interface{}{},
+			"Deleted":                false,
+			"DeliveryList":           []interface{}{},
+			"CustomsTrackingList":    []interface{}{},
+			"TaxExemptionReason":     "",
+			"TaxExemptionReasonCode": "",
+			"IdMensei":               0,
+			"Mensei":                 nil,
+			"SiniflandirmaKodu":      nil,
+			"IdSiniflandirmaKodu":    0,
+			"GTipNoArcvh":            "",
 		})
 	}
 
@@ -373,34 +373,34 @@ func (c *Client) CreateInvoice(invoice Invoice) (string, error) {
 
 	// Fatura JSON
 	invoiceData := map[string]interface{}{
-		"ETTN":                       "",
-		"InvoiceId":                  "0",
-		"RecipientType":              "2",
-		"InvoiceNumber":              "",
-		"CompanyId":                  c.config.CompanyID,
-		"ScenarioType":               "0",
-		"ReceiverInboxTag":           nil,
-		"InvoiceDate":                invoice.Date.Format("02-01-2006"),
-		"InvoiceTime":                invoice.Date.Format("15:04:05"),
-		"InvoiceType":                "1", // Satış faturası
-		"LastPaymentDate":            "",
-		"DispatchList":               []interface{}{},
-		"IdAlici":                    invoice.CustomerID,
-		"Products":                   products,
-		"CurrencyCode":               c.config.CurrencyCode,
-		"CrossRate":                  0,
-		"TaxExemptionReason":         "",
-		"Notes":                      notes,
-		"Receiver":                   map[string]string{"SendingType": "1"},
-		"IsFreeOfCharge":             false,
-		"KismiIadeMi":                false,
-		"CompanyBankAccountList":     []interface{}{},
-		"TotalLineExtensionAmount":   totalLineExtension,
-		"TotalVATAmount":             totalVAT,
-		"TotalTaxInclusiveAmount":    totalAmount,
-		"TotalDiscountAmount":        0,
-		"TotalPayableAmount":         totalAmount,
-		"RoundCounter":               0,
+		"ETTN":                     "",
+		"InvoiceId":                "0",
+		"RecipientType":            "2",
+		"InvoiceNumber":            "",
+		"CompanyId":                c.config.CompanyID,
+		"ScenarioType":             "0",
+		"ReceiverInboxTag":         nil,
+		"InvoiceDate":              invoice.Date.Format("02-01-2006"),
+		"InvoiceTime":              invoice.Date.Format("15:04:05"),
+		"InvoiceType":              "1", // Satış faturası
+		"LastPaymentDate":          "",
+		"DispatchList":             []interface{}{},
+		"IdAlici":                  invoice.CustomerID,
+		"Products":                 products,
+		"CurrencyCode":             c.config.CurrencyCode,
+		"CrossRate":                0,
+		"TaxExemptionReason":       "",
+		"Notes":                    notes,
+		"Receiver":                 map[string]string{"SendingType": "1"},
+		"IsFreeOfCharge":           false,
+		"KismiIadeMi":              false,
+		"CompanyBankAccountList":   []interface{}{},
+		"TotalLineExtensionAmount": totalLineExtension,
+		"TotalVATAmount":           totalVAT,
+		"TotalTaxInclusiveAmount":  totalAmount,
+		"TotalDiscountAmount":      0,
+		"TotalPayableAmount":       totalAmount,
+		"RoundCounter":             0,
 	}
 
 	jsonData, err := json.Marshal(invoiceData)
@@ -463,29 +463,29 @@ func (c *Client) CreateInvoiceRaw(invoice Invoice) ([]byte, error) {
 		totalVAT += vatAmount
 
 		products = append(products, map[string]interface{}{
-			"ProductInvoiceModelId":   0,
-			"DiscountAmount":          0,
-			"DiscountRate":            0,
-			"LineExtensionAmount":     lineTotal,
-			"MeasureUnitId":           c.config.MeasureUnit,
-			"ProductId":               nil,
-			"ProductName":             product.Name,
-			"Quantity":                product.Quantity,
-			"UnitPrice":               product.Price,
-			"VatAmount":               vatAmount,
-			"VatRate":                 product.VATRate,
-			"AdditionalTaxes":         []interface{}{},
-			"WitholdingTaxes":         []interface{}{},
-			"Deleted":                 false,
-			"DeliveryList":            []interface{}{},
-			"CustomsTrackingList":     []interface{}{},
-			"TaxExemptionReason":      "",
-			"TaxExemptionReasonCode":  "",
-			"IdMensei":                0,
-			"Mensei":                  nil,
-			"SiniflandirmaKodu":       nil,
-			"IdSiniflandirmaKodu":     0,
-			"GTipNoArcvh":             "",
+			"ProductInvoiceModelId":  0,
+			"DiscountAmount":         0,
+			"DiscountRate":           0,
+			"LineExtensionAmount":    lineTotal,
+			"MeasureUnitId":          c.config.MeasureUnit,
+			"ProductId":              nil,
+			"ProductName":            product.Name,
+			"Quantity":               product.Quantity,
+			"UnitPrice":              product.Price,
+			"VatAmount":              vatAmount,
+			"VatRate":                product.VATRate,
+			"AdditionalTaxes":        []interface{}{},
+			"WitholdingTaxes":        []interface{}{},
+			"Deleted":                false,
+			"DeliveryList":           []interface{}{},
+			"CustomsTrackingList":    []interface{}{},
+			"TaxExemptionReason":     "",
+			"TaxExemptionReasonCode": "",
+			"IdMensei":               0,
+			"Mensei":                 nil,
+			"SiniflandirmaKodu":      nil,
+			"IdSiniflandirmaKodu":    0,
+			"GTipNoArcvh":            "",
 		})
 	}
 
@@ -499,34 +499,34 @@ func (c *Client) CreateInvoiceRaw(invoice Invoice) ([]byte, error) {
 
 	// Fatura JSON - CreateInvoice ile aynı format
 	invoiceData := map[string]interface{}{
-		"ETTN":                       "",
-		"InvoiceId":                  "0",
-		"RecipientType":              "2",
-		"InvoiceNumber":              "",
-		"CompanyId":                  c.config.CompanyID,
-		"ScenarioType":               "0",
-		"ReceiverInboxTag":           nil,
-		"InvoiceDate":                invoice.Date.Format("02-01-2006"),
-		"InvoiceTime":                invoice.Date.Format("15:04:05"),
-		"InvoiceType":                "1", // Satış faturası
-		"LastPaymentDate":            "",
-		"DispatchList":               []interface{}{},
-		"IdAlici":                    invoice.CustomerID,
-		"Products":                   products,
-		"CurrencyCode":               c.config.CurrencyCode,
-		"CrossRate":                  0,
-		"TaxExemptionReason":         "",
-		"Notes":                      notes,
-		"Receiver":                   map[string]string{"SendingType": "1"},
-		"IsFreeOfCharge":             false,
-		"KismiIadeMi":                false,
-		"CompanyBankAccountList":     []interface{}{},
-		"TotalLineExtensionAmount":   totalLineExtension,
-		"TotalVATAmount":             totalVAT,
-		"TotalTaxInclusiveAmount":    totalAmount,
-		"TotalDiscountAmount":        0,
-		"TotalPayableAmount":         totalAmount,
-		"RoundCounter":               0,
+		"ETTN":                     "",
+		"InvoiceId":                "0",
+		"RecipientType":            "2",
+		"InvoiceNumber":            "",
+		"CompanyId":                c.config.CompanyID,
+		"ScenarioType":             "0",
+		"ReceiverInboxTag":         nil,
+		"InvoiceDate":              invoice.Date.Format("02-01-2006"),
+		"InvoiceTime":              invoice.Date.Format("15:04:05"),
+		"InvoiceType":              "1", // Satış faturası
+		"LastPaymentDate":          "",
+		"DispatchList":             []interface{}{},
+		"IdAlici":                  invoice.CustomerID,
+		"Products":                 products,
+		"CurrencyCode":             c.config.CurrencyCode,
+		"CrossRate":                0,
+		"TaxExemptionReason":       "",
+		"Notes":                    notes,
+		"Receiver":                 map[string]string{"SendingType": "1"},
+		"IsFreeOfCharge":           false,
+		"KismiIadeMi":              false,
+		"CompanyBankAccountList":   []interface{}{},
+		"TotalLineExtensionAmount": totalLineExtension,
+		"TotalVATAmount":           totalVAT,
+		"TotalTaxInclusiveAmount":  totalAmount,
+		"TotalDiscountAmount":      0,
+		"TotalPayableAmount":       totalAmount,
+		"RoundCounter":             0,
 	}
 
 	jsonData, err := json.Marshal(invoiceData)
@@ -565,7 +565,7 @@ func (c *Client) CreateInvoiceRaw(invoice Invoice) ([]byte, error) {
 func (c *Client) CreateInvoiceWithCustomer(customer *Customer, products []Product) (string, error) {
 	// Müşteri ID varsa direkt fatura oluştur
 	customerID := ""
-	
+
 	// Müşteri bilgisi verilmişse önce müşteri oluştur veya mevcut olanı bul
 	if customer != nil {
 		id, err := c.CreateCustomerOrGetExisting(*customer)
@@ -616,23 +616,18 @@ func (c *Client) updateToken(path string) error {
 	return nil
 }
 
-// GetRecipientList müşteri listesini getirir
-func (c *Client) GetRecipientList(limit int) (*RecipientListResponse, error) {
-	// Default limit
-	if limit <= 0 {
-		limit = 200
-	}
-
+// GetRecipientList müşteri listesini pagination ile getirir
+func (c *Client) GetRecipientList(start, length int) (*RecipientListResponse, error) {
 	// Form data for recipient list
 	form := url.Values{
-		"draw":             {"1"},
-		"start":            {"0"},
-		"length":           {fmt.Sprintf("%d", limit)},
-		"search[value]":    {""},
-		"search[regex]":    {"false"},
-		"AliciTipi":        {"0"},
-		"CompanyIdFilter":  {c.config.CompanyID},
-		"RecipientState":   {"1"},
+		"draw":            {"1"},
+		"start":           {fmt.Sprintf("%d", start)},
+		"length":          {fmt.Sprintf("%d", length)},
+		"search[value]":   {""},
+		"search[regex]":   {"false"},
+		"AliciTipi":       {"0"},
+		"CompanyIdFilter": {c.config.CompanyID},
+		"RecipientState":  {"1"},
 	}
 
 	// Columns configuration
@@ -689,7 +684,7 @@ func (c *Client) GetRecipientList(limit int) (*RecipientListResponse, error) {
 // GetRecipientDetail müşteri detaylarını getirir
 func (c *Client) GetRecipientDetail(recipientID int) (*Customer, error) {
 	url := fmt.Sprintf("%s/Recipient/Detail?RecipientId=%d", c.config.BaseURL, recipientID)
-	
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("request oluşturulamadı: %w", err)
@@ -764,15 +759,15 @@ func calculateSimilarityScore(s1, s2 string) float64 {
 	// Normalize strings
 	s1 = strings.ToLower(strings.TrimSpace(s1))
 	s2 = strings.ToLower(strings.TrimSpace(s2))
-	
+
 	if s1 == s2 {
 		return 1.0
 	}
-	
+
 	if s1 == "" || s2 == "" {
 		return 0.0
 	}
-	
+
 	// Calculate Levenshtein distance
 	longer := s1
 	shorter := s2
@@ -780,12 +775,12 @@ func calculateSimilarityScore(s1, s2 string) float64 {
 		longer = s2
 		shorter = s1
 	}
-	
+
 	longerLength := float64(len(longer))
 	if longerLength == 0 {
 		return 1.0
 	}
-	
+
 	editDistance := levenshteinDistance(longer, shorter)
 	return (longerLength - float64(editDistance)) / longerLength
 }
@@ -798,13 +793,13 @@ func levenshteinDistance(s1, s2 string) int {
 	if len(s2) == 0 {
 		return len(s1)
 	}
-	
+
 	// Create matrix
 	matrix := make([][]int, len(s1)+1)
 	for i := range matrix {
 		matrix[i] = make([]int, len(s2)+1)
 	}
-	
+
 	// Initialize first column and row
 	for i := 0; i <= len(s1); i++ {
 		matrix[i][0] = i
@@ -812,7 +807,7 @@ func levenshteinDistance(s1, s2 string) int {
 	for j := 0; j <= len(s2); j++ {
 		matrix[0][j] = j
 	}
-	
+
 	// Fill matrix
 	for i := 1; i <= len(s1); i++ {
 		for j := 1; j <= len(s2); j++ {
@@ -820,7 +815,7 @@ func levenshteinDistance(s1, s2 string) int {
 			if s1[i-1] != s2[j-1] {
 				cost = 1
 			}
-			
+
 			matrix[i][j] = min(
 				matrix[i-1][j]+1,      // deletion
 				matrix[i][j-1]+1,      // insertion
@@ -828,7 +823,7 @@ func levenshteinDistance(s1, s2 string) int {
 			)
 		}
 	}
-	
+
 	return matrix[len(s1)][len(s2)]
 }
 
@@ -864,31 +859,66 @@ func (c *Client) CreateCustomerOrGetExisting(customer Customer) (string, error) 
 
 	// Hata mesajında "zaten kayıtlıdır" kontrolü
 	if strings.Contains(err.Error(), "zaten kayıtlıdır") {
-		// Müşteri zaten var - listeden bul
-		recipientList, listErr := c.GetRecipientList(500) // Get more recipients to increase chance of finding
-		if listErr != nil {
-			return "", fmt.Errorf("müşteri listesi alınamadı: %w", listErr)
-		}
-
-		// İsme göre eşleşenleri bul
-		var matches []RecipientListItem
+		// Müşteri zaten var - pagination ile ara
+		var allMatches []RecipientListItem
 		customerNameLower := strings.ToLower(strings.TrimSpace(customer.Name))
+		start := 0
+		length := 200
+		highConfidenceScore := 0.8 // %80 üzeri eşleşme varsa dur
 		
-		for _, recipient := range recipientList.Data {
-			recipientNameLower := strings.ToLower(strings.TrimSpace(recipient.AliciAdi))
-			if recipientNameLower == customerNameLower {
-				matches = append(matches, recipient)
+		for {
+			recipientList, listErr := c.GetRecipientList(start, length)
+			if listErr != nil {
+				return "", fmt.Errorf("müşteri listesi alınamadı: %w", listErr)
 			}
+			
+			// Bu sayfadaki eşleşmeleri bul
+			for _, recipient := range recipientList.Data {
+				recipientNameLower := strings.ToLower(strings.TrimSpace(recipient.AliciAdi))
+				if recipientNameLower == customerNameLower {
+					allMatches = append(allMatches, recipient)
+					
+					// Tek eşleşme varsa hemen kontrol et
+					if len(allMatches) == 1 {
+						// Detay al ve skor hesapla
+						detail, detailErr := c.GetRecipientDetail(recipient.IdAlici)
+						if detailErr == nil {
+							score := 0.0
+							addressScore := calculateSimilarityScore(detail.Address, customer.Address)
+							score += addressScore * 0.5
+							if detail.CityID == customer.CityID {
+								score += 0.3
+							}
+							if detail.DistrictID == customer.DistrictID {
+								score += 0.2
+							}
+							
+							// Yüksek skorlu eşleşme bulundu - dur
+							if score >= highConfidenceScore {
+								return fmt.Sprintf("%d", recipient.IdAlici), nil
+							}
+						}
+					}
+				}
+			}
+			
+			// Eğer gelen veri sayısı length'ten azsa, tüm veri alındı
+			if len(recipientList.Data) < length {
+				break
+			}
+			
+			// Sonraki sayfa
+			start += length
 		}
-
-		// Eşleşme bulunamadı
-		if len(matches) == 0 {
+		
+		// Hiç eşleşme bulunamadı
+		if len(allMatches) == 0 {
 			return "", fmt.Errorf("müşteri zaten kayıtlı ancak listede bulunamadı: %s", customer.Name)
 		}
 
 		// Tek eşleşme varsa direkt dön
-		if len(matches) == 1 {
-			return fmt.Sprintf("%d", matches[0].IdAlici), nil
+		if len(allMatches) == 1 {
+			return fmt.Sprintf("%d", allMatches[0].IdAlici), nil
 		}
 
 		// Birden fazla eşleşme var - adres benzerliğine göre sırala
@@ -896,26 +926,26 @@ func (c *Client) CreateCustomerOrGetExisting(customer Customer) (string, error) 
 			recipient RecipientListItem
 			score     float64
 		}
-		
+
 		var scoredMatches []scoredMatch
-		
-		for _, match := range matches {
+
+		for _, match := range allMatches {
 			// Detaylı bilgi al
 			detail, detailErr := c.GetRecipientDetail(match.IdAlici)
 			if detailErr != nil {
 				// Detay alınamazsa sadece mevcut bilgiyle skor hesapla
 				score := 0.0
-				
+
 				// İl kontrolü
 				if match.IdIl == parseIntOrZero(customer.CityID) {
 					score += 0.3
 				}
-				
+
 				// İlçe kontrolü
 				if match.IdIlce == parseIntOrZero(customer.DistrictID) {
 					score += 0.2
 				}
-				
+
 				scoredMatches = append(scoredMatches, scoredMatch{
 					recipient: match,
 					score:     score,
@@ -925,27 +955,27 @@ func (c *Client) CreateCustomerOrGetExisting(customer Customer) (string, error) 
 
 			// Detaylı skorlama
 			score := 0.0
-			
+
 			// Adres benzerliği (en önemli - %50)
 			addressScore := calculateSimilarityScore(detail.Address, customer.Address)
 			score += addressScore * 0.5
-			
+
 			// İl kontrolü (%30)
 			if detail.CityID == customer.CityID {
 				score += 0.3
 			}
-			
+
 			// İlçe kontrolü (%20)
 			if detail.DistrictID == customer.DistrictID {
 				score += 0.2
 			}
-			
+
 			scoredMatches = append(scoredMatches, scoredMatch{
 				recipient: match,
 				score:     score,
 			})
 		}
-		
+
 		// En yüksek skora sahip olanı bul
 		if len(scoredMatches) > 0 {
 			bestMatch := scoredMatches[0]
@@ -956,9 +986,9 @@ func (c *Client) CreateCustomerOrGetExisting(customer Customer) (string, error) 
 			}
 			return fmt.Sprintf("%d", bestMatch.recipient.IdAlici), nil
 		}
-		
+
 		// Hiç skor hesaplanamadıysa ilk eşleşeni dön
-		return fmt.Sprintf("%d", matches[0].IdAlici), nil
+		return fmt.Sprintf("%d", allMatches[0].IdAlici), nil
 	}
 
 	// Başka bir hata oluştu
