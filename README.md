@@ -211,6 +211,36 @@ if err != nil {
 }
 ```
 
+### Müşteri Listesi ve Mevcut Müşteri Kontrolü
+
+```go
+// Müşteri listesini getir
+recipientList, err := client.GetRecipientList(200) // Max 200 müşteri
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Toplam müşteri: %d\n", recipientList.RecordsTotal)
+
+// Müşteri detayı al
+detail, err := client.GetRecipientDetail(recipientList.Data[0].IdAlici)
+if err != nil {
+    log.Fatal(err)
+}
+
+// Müşteri oluştur veya mevcut olanı bul
+// Bu fonksiyon önce müşteri oluşturmayı dener
+// Eğer "zaten kayıtlıdır" hatası alırsa:
+// 1. Müşteri listesinden isim eşleşmesi arar
+// 2. Birden fazla eşleşme varsa adres benzerliğine göre en uygununu seçer
+customerID, err := client.CreateCustomerOrGetExisting(customer)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+**Not:** Bireysel faturalarda TC kimlik numarası benzersiz değildir (11111111111 gibi). Bu yüzden birden fazla isim eşleşmesi olduğunda sistem adres, il ve ilçe benzerliğine göre skorlama yapar ve en uygun müşteriyi seçer.
+
 ### Tam Örnek - Kolay Fatura Oluşturma
 
 ```go

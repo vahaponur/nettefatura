@@ -10,7 +10,7 @@ example_test.go
 # IDE files
 .vscode/
 .idea/
-
+.txt
 # Go build files
 *.exe
 *.dll
@@ -30,3 +30,4 @@ vendor/
 go.work
 nettefatura-analyzer/
 *.txt
+CLAUDE.md
